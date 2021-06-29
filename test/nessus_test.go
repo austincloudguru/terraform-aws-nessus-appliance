@@ -21,7 +21,7 @@ func TestExamplesTerraform(t *testing.T) {
 
   // Verify that the ALB is created
   tfImageId := terraform.Output(t, terraformOpts, "image_id")
-  assert.Equal(t, albTg, "terratest")
+  assert.Equal(t, tfImageId, "ami-023dd6394b8980892")
 
   // Verify that the certs 
 //   tfCertArn := terraform.Output(t, terraformOpts, "certificate_arn")
