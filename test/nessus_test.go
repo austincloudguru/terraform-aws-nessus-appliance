@@ -33,4 +33,4 @@ func TestExamplesTerraform(t *testing.T) {
 //    url := fmt.Sprintf("http://%s", fqdn)
 //    http_helper.HttpGetWithRetry(t, url, nil, 404, "404 Not Found", 10, 10*time.Second)
 
-// }
+}
