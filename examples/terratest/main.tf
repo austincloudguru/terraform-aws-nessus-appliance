@@ -7,8 +7,25 @@ provider "aws" {
 
 data "aws_availability_zones" "available" {}
 
-data "aws_route53_zone" "external" {
-  name = join("", [var.tld, "."])
+locals {
+  security_group_ingress = {
+    default = {
+      description = "NFS Inbound"
+      from_port   = 8834
+      protocol    = "tcp"
+      to_port     = 8834
+      self        = false
+      cidr_blocks = ["0.0.0.0/32"]
+    },
+    ssh = {
+      description = "ssh"
+      from_port   = 22
+      protocol    = "tcp"
+      to_port     = 22
+      self        = false
+      cidr_blocks = ["10.0.0.0/16"]
+    }
+  }
 }
 
 module "vpc" {
@@ -21,4 +38,16 @@ module "vpc" {
   enable_nat_gateway = true
   single_nat_gateway = true
   tags               = var.tags
+}
+
+module "nessus-appliance" {
+  source                 = "../../"
+  preauth                = true
+  security_group_ingress = local.security_group_ingress
+  vpc_id                 = module.vpc.vpc_id
+  subnet_id              = module.vpc.private_subnets[0]
+  nessus_scanner_name    = "myscanner"
+  nessus_key             = "dloiijfhqoiewrubfoqieuurbfcpoiqweunrcopiqeuhnrfpoiu13ehrwft"
+  nessus_proxy           = "10.0.0.1"
+  nessus_proxy_port      = 8080
 }

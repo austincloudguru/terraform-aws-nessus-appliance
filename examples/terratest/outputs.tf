@@ -1,3 +1,3 @@
-output "tld" {
-  value = data.aws_route53_zone.external.name
+output "image_id" {
+  value = module.nessus-appliance.image_id
 }
