@@ -18,7 +18,7 @@ concurrency: terraform-aws-nessus-appliance
 
 jobs:
   build:
-    name: Test XXXXX Module
+    name: Test Nessus Appliance Module
     runs-on: ubuntu-latest
 
     steps:
@@ -34,7 +34,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: ${{ GO_VERSION }}
+          go-version: ${{ env.GO_VERSION }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
