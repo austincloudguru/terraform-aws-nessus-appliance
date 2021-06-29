@@ -42,12 +42,8 @@ module "vpc" {
 
 module "nessus-appliance" {
   source                 = "../../"
-  preauth                = true
   security_group_ingress = local.security_group_ingress
   vpc_id                 = module.vpc.vpc_id
   subnet_id              = module.vpc.private_subnets[0]
-  nessus_scanner_name    = "myscanner"
   nessus_key             = "dloiijfhqoiewrubfoqieuurbfcpoiqweunrcopiqeuhnrfpoiu13ehrwft"
-  nessus_proxy           = "10.0.0.1"
-  nessus_proxy_port      = 8080
 }

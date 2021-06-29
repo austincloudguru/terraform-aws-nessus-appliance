@@ -1,5 +1,14 @@
 locals {
-  product_code = var.preauth ? "4m4uvwtrl5t872c56wb131ttw" : "8fn69npzmbzcs4blc4583jd0y"
+  userdata = templatefile("${path.module}/files//user_data.tpl",
+    {
+      license    = var.license_type
+      key        = var.nessus_key
+      name       = var.nessus_scanner_name
+      role       = aws_iam_role.this.name
+      proxy      = var.nessus_proxy
+      proxy_port = var.nessus_proxy_port
+    }
+  )
 }
 
 #-----------------------------------
@@ -97,65 +106,9 @@ data "aws_ami" "this" {
 
   filter {
     name   = "product-code"
-    values = [local.product_code]
+    values = [var.product_code[var.license_type]]
   }
 }
-
-#------------------------------------------------------------------------------
-# Create the Userdata Templates
-#------------------------------------------------------------------------------
-# data "template_file" "user_data" {
-#   count    = var.preauth ? 1 : 0
-#   template = <<EOF
-# {
-# "name": "$${nessus_name}",
-# "key":"$${nessus_key}",
-# "iam_role": "$${nessus_iam}",
-# nessus_proxy == "" ? "" : "\"proxy\": \"$${nessus_proxy}\""
-# nessus_proxy_port == "" ? "" : "\"proxy_port\": \"$${nessus_proxy_port}\""
-# }
-# EOF
-
-
-#   vars = {
-#     nessus_name = var.nessus_scanner_name
-#     nessus_key = var.nessus_key
-#     nessus_iam = aws_iam_role.this.name
-#     nessus_proxy = var.nessus_proxy
-#     nessus_proxy_port = var.nessus_proxy_port
-#   }
-# }
-
-data "template_file" "user_data" {
-  count    = var.preauth ? 1 : 0
-  template = <<EOF
-{
-"name": "$${nessus_name}",
-"key":"$${nessus_key}",
-"iam_role": "$${nessus_iam}",
-$${nessus_proxy}
-$${nessus_proxy_port}
-}
-EOF
-
-
-  vars = {
-    nessus_name       = var.nessus_scanner_name
-    nessus_key        = var.nessus_key
-    nessus_iam        = aws_iam_role.this.name
-    nessus_proxy      = var.nessus_proxy == "" ? "" : "\"proxy\": \"{{ var.nessus_proxy }}\""
-    nessus_proxy_port = var.nessus_proxy_port == "" ? "" : "\"proxy_port\": \"{{ var.nessus_proxy_port }}\""
-  }
-}
-
-
-# #!/bin/bash
-# yum update -y
-# service nessusd stop
-# /opt/nessus/sbin/nessuscli managed link --key=<insert-key-here> --cloud
-# service nessusd start
-
-
 
 #-----------------------------------
 # Deploy Nessus Instance
@@ -167,7 +120,7 @@ resource "aws_instance" "this" {
   iam_instance_profile   = aws_iam_instance_profile.this.name
   subnet_id              = var.subnet_id
   vpc_security_group_ids = [aws_security_group.this.id]
-  user_data              = var.preauth ? data.template_file.user_data[0].rendered : ""
+  user_data              = local.userdata
   tags = merge(
     {
       "Name" = var.name

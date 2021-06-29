@@ -7,17 +7,19 @@ variable "name" {
 variable "license_type" {
   description = "The type of Nessus License to use: byob or preauth"
   type        = string
-  default     = "byob"
+  default     = "byol"
   validation {
-    condition     = var.license_type == "byob" || var.license_type == "preauth"
+    condition     = var.license_type == "byol" || var.license_type == "preauth"
     error_message = "Sorry, type must be either 'byob' or 'preauth'."
   }
 }
 
-variable "preauth" {
-  description = "True for the pre-authorized image and False for BYOL"
-  type        = bool
-  default     = true
+variable "product_code" {
+  type = map(any)
+  default = {
+    "byol"    = "8fn69npzmbzcs4blc4583jd0y"
+    "preauth" = "4m4uvwtrl5t872c56wb131ttw"
+  }
 }
 
 variable "tags" {

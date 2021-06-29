@@ -14,7 +14,7 @@
 #   GO_VERSION: 1.16
 
 # # Set to the repository name
-# concurrency: terraform-module-template
+# concurrency: terraform-aws-nessus-appliance
 
 # jobs:
 #   build:

@@ -1,4 +1,4 @@
-module github.com/austincloudguru/terraform-module-template
+module github.com/austincloudguru/terraform-aws-nessus-appliance
 
 go 1.16
 
