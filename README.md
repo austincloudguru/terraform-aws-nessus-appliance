@@ -97,6 +97,10 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_image_id"></a> [image\_id](#output\_image\_id) | n/a |
+| <a name="output_instance_arn"></a> [instance\_arn](#output\_instance\_arn) | Instance Arn |
+| <a name="output_instance_private_ip"></a> [instance\_private\_ip](#output\_instance\_private\_ip) | Instance Private IP Address |
+| <a name="output_instance_public_ip"></a> [instance\_public\_ip](#output\_instance\_public\_ip) | Instance Public IP Address |
+| <a name="output_role_arn"></a> [role\_arn](#output\_role\_arn) | Role ARN |
 | <a name="output_security_group_arn"></a> [security\_group\_arn](#output\_security\_group\_arn) | Security Group ARN |
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | Security Group ID |
 | <a name="output_security_group_name"></a> [security\_group\_name](#output\_security\_group\_name) | Security Group name |

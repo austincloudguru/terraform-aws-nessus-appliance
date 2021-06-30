@@ -10,12 +10,12 @@ data "aws_availability_zones" "available" {}
 locals {
   security_group_ingress = {
     default = {
-      description = "NFS Inbound"
+      description = "Nessus Inbound"
       from_port   = 8834
       protocol    = "tcp"
       to_port     = 8834
       self        = false
-      cidr_blocks = ["0.0.0.0/32"]
+      cidr_blocks = ["0.0.0.0/0"]
     },
     ssh = {
       description = "ssh"
@@ -44,6 +44,6 @@ module "nessus-appliance" {
   source                 = "../../"
   security_group_ingress = local.security_group_ingress
   vpc_id                 = module.vpc.vpc_id
-  subnet_id              = module.vpc.private_subnets[0]
+  subnet_id              = module.vpc.public_subnets[0]
   nessus_key             = "dloiijfhqoiewrubfoqieuurbfcpoiqweunrcopiqeuhnrfpoiu13ehrwft"
 }
