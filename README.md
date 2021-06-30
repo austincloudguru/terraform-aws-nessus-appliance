@@ -1,5 +1,5 @@
 # AWS Nessus Appliance Module
-[![CI](https://github.com/austincloudguru/terraform-aws-nessus-appliance/workflows/CI/badge.svg?event=push)](https://github.com/austincloudguru/terraform-aws-nessus-appliance/actions?query=workflow%3ACI) 
+[![CI](https://github.com/austincloudguru/terraform-aws-nessus-appliance/workflows/CI/badge.svg?event=pull_request)](https://github.com/austincloudguru/terraform-aws-nessus-appliance/actions?query=workflow%3ACI) 
 Terraform module which creates a nessus server in AWS
 
 ## Usage
