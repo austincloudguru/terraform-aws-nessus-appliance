@@ -8,6 +8,8 @@ on:
   push:
     branches-ignore:
       - master
+  paths-ignore:
+      - '**/README.md'
 
 env:
   TERRAFORM_VERSION: 1.0.1
