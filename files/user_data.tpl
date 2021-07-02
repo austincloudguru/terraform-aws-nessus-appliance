@@ -1,6 +1,6 @@
 %{ if license == "preauth" }{
     "name": "${name}",
-    "key":"${key}",
+    "key": "${key}",
     "iam_role": "${role}",
     %{ if proxy != "" }"proxy": ${proxy}%{ endif }
     %{ if proxy_port != "" }"proxy": ${proxy_port}%{ endif }
