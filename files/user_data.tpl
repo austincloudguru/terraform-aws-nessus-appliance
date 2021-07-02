@@ -1,9 +1,9 @@
 %{ if license == "preauth" }{
     "name": "${name}",
     "key": "${key}",
-    "iam_role": "${role}",
-    %{ if proxy != "" }"proxy": ${proxy}%{ endif }
-    %{ if proxy_port != "" }"proxy": ${proxy_port}%{ endif }
+    %{ if proxy != "" }"proxy": ${proxy},%{ endif }
+    %{ if proxy_port != "" }"proxy": ${proxy_port},%{ endif }
+    "iam_role": "${role}"
 }
 %{ else }#!/bin/bash
  yum update -y
