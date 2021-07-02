@@ -137,3 +137,68 @@ resource "aws_instance" "this" {
     ignore_changes = [volume_tags]
   }
 }
+
+#-----------------------------------
+# Cloud Connector Instance Profile
+#-----------------------------------
+resource "aws_iam_role" "tenable-connector" {
+  count                = var.cloud_connector ? 1 : 0
+  name                 = "tennableio-connector"
+  description          = "Tenable.io Cloud Connector Role"
+  max_session_duration = 28800
+  assume_role_policy   = data.aws_iam_policy_document.tenable-connector-assume-role.json
+}
+
+resource "aws_iam_role_policy" "tenable-connector" {
+  count  = var.cloud_connector ? 1 : 0
+  name   = "tennable-io-connector-policy"
+  role   = resource.aws_iam_role.tenable-connector[0].arn
+  policy = data.aws_iam_policy_document.tenable-connector.json
+
+}
+
+data "aws_iam_policy_document" "tenable-connector-assume-role" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "sts:AssumeRole",
+    ]
+    principals {
+      identifiers = ["arn:aws:iam::012615275169:root"]
+      type        = "AWS"
+    }
+    condition {
+      test     = "StringEquals"
+      values   = [var.external_id]
+      variable = "sts:ExternalId"
+    }
+  }
+}
+
+data "aws_iam_policy_document" "tenable-connector" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:Describe*",
+      "ec2:DescribeVpcPeeringConnections",
+      "ec2:DescribeVpcs",
+      "s3:ListAllMyBuckets",
+      "s3:GetObject",
+      "s3:GetBucketLocation",
+      "cloudtrail:GetTrailStatus",
+      "cloudtrail:DescribeTrails",
+      "cloudtrail:LookupEvents",
+      "cloudtrail:ListTags",
+      "cloudtrail:ListPublicKeys",
+      "cloudtrail:GetEventSelectors",
+      "kms:ListAliases",
+      "elasticloadbalancing:Describe*",
+      "iam:ListUsers",
+      "cloudwatch:ListMetrics",
+      "cloudwatch:GetMetricStatistics",
+      "cloudwatch:Describe*",
+      "autoscaling:Describe*"
+    ]
+    resources = ["*"]
+  }
+}

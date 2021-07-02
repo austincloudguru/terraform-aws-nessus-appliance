@@ -46,4 +46,6 @@ module "nessus-appliance" {
   vpc_id                 = module.vpc.vpc_id
   subnet_id              = module.vpc.public_subnets[0]
   nessus_key             = "dloiijfhqoiewrubfoqieuurbfcpoiqweunrcopiqeuhnrfpoiu13ehrwft"
+  external_id            = "dfasdfasdfihqewprijfnqwepikjnf"
+  cloud_connector        = true
 }
