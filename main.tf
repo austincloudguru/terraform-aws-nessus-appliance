@@ -143,7 +143,7 @@ resource "aws_instance" "this" {
 #-----------------------------------
 resource "aws_iam_role" "tenable-connector" {
   count                = var.cloud_connector ? 1 : 0
-  name                 = "tennableio-connector"
+  name                 = "tenableio-connector"
   description          = "Tenable.io Cloud Connector Role"
   max_session_duration = 28800
   assume_role_policy   = data.aws_iam_policy_document.tenable-connector-assume-role.json
@@ -151,7 +151,7 @@ resource "aws_iam_role" "tenable-connector" {
 
 resource "aws_iam_role_policy" "tenable-connector" {
   count  = var.cloud_connector ? 1 : 0
-  name   = "tennable-io-connector-policy"
+  name   = "tenable-io-connector-policy"
   role   = resource.aws_iam_role.tenable-connector[0].name
   policy = data.aws_iam_policy_document.tenable-connector.json
 
