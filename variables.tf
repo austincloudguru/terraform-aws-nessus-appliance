@@ -118,3 +118,15 @@ variable "nessus_proxy_port" {
   type        = string
   default     = ""
 }
+
+variable "external_id" {
+  description = "Container ID in Cloud Connecter Advanced Settings"
+  type        = string
+  default     = ""
+}
+
+variable "cloud_connector" {
+  description = "Set to True if you want to install the IAM roles for cloud connector"
+  type        = bool
+  default     = false
+}
