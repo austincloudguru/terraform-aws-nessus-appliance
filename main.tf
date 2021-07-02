@@ -152,7 +152,7 @@ resource "aws_iam_role" "tenable-connector" {
 resource "aws_iam_role_policy" "tenable-connector" {
   count  = var.cloud_connector ? 1 : 0
   name   = "tennable-io-connector-policy"
-  role   = resource.aws_iam_role.tenable-connector[0].arn
+  role   = resource.aws_iam_role.tenable-connector[0].name
   policy = data.aws_iam_policy_document.tenable-connector.json
 
 }
