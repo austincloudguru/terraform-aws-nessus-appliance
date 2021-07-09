@@ -73,6 +73,16 @@ variable "security_group_egress" {
   }
 }
 
+variable "additional_iam_statements" {
+  description = "Additional IAM statements for the ECS instances"
+  type = list(object({
+    effect    = string
+    actions   = list(string)
+    resources = list(string)
+  }))
+  default = []
+}
+
 variable "vpc_id" {
   description = "The name of the VPC that EFS will be deployed to"
   type        = string
