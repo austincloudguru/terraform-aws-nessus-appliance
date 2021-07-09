@@ -3,7 +3,12 @@
 ![Latest Version](https://img.shields.io/github/v/tag/austincloudguru/terraform-aws-nessus-appliance?sort=semver&label=Latest%20Version) 
 [![License](https://img.shields.io/github/license/austincloudguru/terraform-aws-nessus-appliance)](https://github.com/austincloudguru/terraform-aws-nessus-appliance/blob/master/LICENSE)
 
-Terraform module which creates a nessus server in AWS from Tenable's AMI for use with Tenable.io.  You will need to go to the AWS Marketplace and subscribe to the (Pre-Authorized or BYOL) image prior to building with Terraform.  
+Terraform module which creates a nessus server in AWS from Tenable's AMI for use with Tenable.io or Tenable.sc.  You will need to go to the AWS Marketplace and subscribe to the (Pre-Authorized or BYOL) image prior to building with Terraform. 
+
+You will need to set the variable `license_type` to one of the following:
+- preauth: If you are deploying a preauth server with Tenable.io
+- byol: If you are using a BYOL license with Tenable.io
+- byol-sc: If you are using a BYOL license with Tenable.sc
 
 ## Usage
 
