@@ -89,7 +89,7 @@ resource "aws_iam_role_policy" "this" {
 data "aws_iam_policy_document" "policy" {
   statement {
     effect = "Allow"
-    action = [
+    actions = [
       "ec2:Describe*",
       "elasticloadbalancing:Describe*",
       "cloudwatch:ListMetrics",
