@@ -3,7 +3,12 @@
 ![Latest Version](https://img.shields.io/github/v/tag/austincloudguru/terraform-aws-nessus-appliance?sort=semver&label=Latest%20Version) 
 [![License](https://img.shields.io/github/license/austincloudguru/terraform-aws-nessus-appliance)](https://github.com/austincloudguru/terraform-aws-nessus-appliance/blob/master/LICENSE)
 
-Terraform module which creates a nessus server in AWS from Tenable's AMI for use with Tenable.io.  You will need to go to the AWS Marketplace and subscribe to the (Pre-Authorized or BYOL) image prior to building with Terraform.  
+Terraform module which creates a nessus server in AWS from Tenable's AMI for use with Tenable.io or Tenable.sc.  You will need to go to the AWS Marketplace and subscribe to the (Pre-Authorized or BYOL) image prior to building with Terraform. 
+
+You will need to set the variable `license_type` to one of the following:
+- preauth: If you are deploying a preauth server with Tenable.io
+- byol: If you are using a BYOL license with Tenable.io
+- byol-sc: If you are using a BYOL license with Tenable.sc
 
 ## Usage
 
@@ -41,6 +46,21 @@ module "nessus" {
                     Terraform = "true"
                     Environment = "development"
                   } 
+}
+```
+
+### Deploying for Tenable.sc
+This module can be used for deploying to Tenable.sc via the `byol-sc` license type.  Credentials are set via the `nessus_credentials` variable.  By default, the variable creates two new shell variables in the user_data script called `NESSUS_USERNAME` and `NESSUS_PASSWORD`. This is not secure since the variables will be visible in the Edit user_data section of the console.  For a more secure solution, you should pull the credentials from a secure location (S3, AWS Secrets Manager, Hashicorp Vault, etc) and set the variables.  For example, with Hashicorp Vault, you could define the `nessus_credentials` variable like this:
+```
+nessus_credentials = <<EOF
+## Get Vault Token
+VAULT_ADDR="https://vault.example.com"
+VAULT_TOKEN=$(curl -X POST "$VAULT_ADDR/v1/auth/aws/login" -d '{"role":"ec2-default-role","pkcs7":"'$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/pkcs7 | tr -d '\n')'"}'|jq -r .auth.client_token)
+
+## Setup Nessus Credentials
+NESSUS_USERNAME=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/globals/data/nessus_credentials|jq -r .data.data.username)
+NESSUS_PASSWORD=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/globals/data/nessus_credentials|jq -r .data.data.password)
+EOF
 }
 ```
 
