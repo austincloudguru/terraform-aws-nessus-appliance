@@ -1,12 +1,13 @@
 locals {
   userdata = templatefile("${path.module}/files//user_data.tpl",
     {
-      license    = var.license_type
-      key        = var.nessus_key
-      name       = var.nessus_scanner_name
-      role       = aws_iam_role.this.name
-      proxy      = var.nessus_proxy
-      proxy_port = var.nessus_proxy_port
+      license            = var.license_type
+      key                = var.nessus_key
+      name               = var.nessus_scanner_name
+      role               = aws_iam_role.this.name
+      proxy              = var.nessus_proxy
+      proxy_port         = var.nessus_proxy_port
+      nessus_credentials = var.nessus_credentials
     }
   )
 }
