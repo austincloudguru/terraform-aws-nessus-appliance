@@ -80,9 +80,10 @@ resource "aws_iam_role" "this" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "ec2_readonly" {
-  role       = aws_iam_role.this.id
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
+resource "aws_iam_role_policy" "this" {
+  name   = var.name
+  role   = aws_iam_role.this.id
+  policy = data.aws_iam_policy_document.policy.json
 }
 
 data "aws_iam_policy_document" "policy" {
