@@ -80,10 +80,38 @@ resource "aws_iam_role" "this" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "ec2_readonly" {
-  role       = aws_iam_role.this.id
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
+resource "aws_iam_role_policy" "this" {
+  name   = var.name
+  role   = aws_iam_role.this.id
+  policy = data.aws_iam_policy_document.policy.json
 }
+
+data "aws_iam_policy_document" "policy" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "ec2:Describe*",
+      "elasticloadbalancing:Describe*",
+      "cloudwatch:ListMetrics",
+      "cloudwatch:GetMetricStatistics",
+      "cloudwatch:Describe*",
+      "autoscaling:Describe*"
+    ]
+    resources = ["*"]
+  }
+  dynamic "statement" {
+    for_each = var.additional_iam_statements
+    content {
+      effect    = lookup(statement.value, "effect", null)
+      actions   = lookup(statement.value, "actions", null)
+      resources = lookup(statement.value, "resources", null)
+    }
+  }
+}
+
+
+
+
 
 data "aws_iam_policy_document" "assume_role" {
   statement {
