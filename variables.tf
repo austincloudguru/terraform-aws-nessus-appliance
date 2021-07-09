@@ -9,7 +9,7 @@ variable "license_type" {
   type        = string
   default     = "byol"
   validation {
-    condition     = var.license_type == "byol" || var.license_type == "preauth"
+    condition     = var.license_type == "byol" || var.license_type == "byol-sc" || var.license_type == "preauth"
     error_message = "Sorry, type must be either 'byob' or 'preauth'."
   }
 }
@@ -18,6 +18,7 @@ variable "product_code" {
   type = map(any)
   default = {
     "byol"    = "8fn69npzmbzcs4blc4583jd0y"
+    "byol-sc" = "8fn69npzmbzcs4blc4583jd0y"
     "preauth" = "4m4uvwtrl5t872c56wb131ttw"
   }
 }
@@ -129,4 +130,13 @@ variable "cloud_connector" {
   description = "Set to True if you want to install the IAM roles for cloud connector"
   type        = bool
   default     = false
+}
+
+variable "nessus_credentials" {
+  description = "Environmental variables to use for Nessus scanner"
+  type        = string
+  default     = <<EOF
+NESSUS_USER='nessususer'
+NESSUS_PASSWORD='p@ssw0rd'
+EOF
 }
