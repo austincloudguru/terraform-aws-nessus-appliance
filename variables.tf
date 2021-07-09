@@ -137,6 +137,6 @@ variable "nessus_credentials" {
   type        = string
   default     = <<EOF
 NESSUS_USER='nessususer'
-NESSUS_PASSWORD='p@ssw0rd'
+NESSUS_PASS='p@ssw0rd'
 EOF
 }
