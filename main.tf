@@ -97,7 +97,7 @@ data "aws_iam_policy_document" "policy" {
       "cloudwatch:Describe*",
       "autoscaling:Describe*"
     ]
-    resources = "*"
+    resources = ["*"]
   }
   dynamic "statement" {
     for_each = var.additional_iam_statements
