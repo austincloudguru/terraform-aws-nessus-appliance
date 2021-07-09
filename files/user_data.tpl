@@ -52,6 +52,6 @@ ${nessus_credentials}
 
 service nessusd stop
 /opt/nessus/sbin/nessuscli fetch --security-center
-/tmp/nessuscli_adduser.expect /opt/nessus/sbin/nessuscli $NESSUS_USER $NESSUS_PASSWORD y
+/tmp/nessuscli_adduser.expect /opt/nessus/sbin/nessuscli $NESSUS_USER $NESSUS_PASS y
 service nessusd start
 %{ endif }

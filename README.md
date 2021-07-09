@@ -50,7 +50,7 @@ module "nessus" {
 ```
 
 ### Deploying for Tenable.sc
-This module can be used for deploying to Tenable.sc via the `byol-sc` license type.  Credentials are set via the `nessus_credentials` variable.  By default, the variable creates two new shell variables in the user_data script called `NESSUS_USERNAME` and `NESSUS_PASSWORD`. This is not secure since the variables will be visible in the Edit user_data section of the console.  For a more secure solution, you should pull the credentials from a secure location (S3, AWS Secrets Manager, Hashicorp Vault, etc) and set the variables.  For example, with Hashicorp Vault, you could define the `nessus_credentials` variable like this:
+This module can be used for deploying to Tenable.sc via the `byol-sc` license type.  Credentials are set via the `nessus_credentials` variable.  By default, the variable creates two new shell variables in the user_data script called `NESSUS_USER` and `NESSUS_PASS`. This is not secure since the variables will be visible in the Edit user_data section of the console.  For a more secure solution, you should pull the credentials from a secure location (S3, AWS Secrets Manager, Hashicorp Vault, etc) and set the variables.  For example, with Hashicorp Vault, you could define the `nessus_credentials` variable like this:
 ```
 nessus_credentials = <<EOF
 ## Get Vault Token
@@ -58,8 +58,8 @@ VAULT_ADDR="https://vault.example.com"
 VAULT_TOKEN=$(curl -X POST "$VAULT_ADDR/v1/auth/aws/login" -d '{"role":"ec2-default-role","pkcs7":"'$(curl -s http://169.254.169.254/latest/dynamic/instance-identity/pkcs7 | tr -d '\n')'"}'|jq -r .auth.client_token)
 
 ## Setup Nessus Credentials
-NESSUS_USERNAME=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/globals/data/nessus_credentials|jq -r .data.data.username)
-NESSUS_PASSWORD=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/globals/data/nessus_credentials|jq -r .data.data.password)
+NESSUS_USER=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/globals/data/nessus_credentials|jq -r .data.data.username)
+NESSUS_PASS=$(curl -s --header "X-Vault-Token: $VAULT_TOKEN" $VAULT_ADDR/v1/globals/data/nessus_credentials|jq -r .data.data.password)
 EOF
 }
 ```
@@ -110,7 +110,7 @@ No modules.
 | <a name="input_key_name"></a> [key\_name](#input\_key\_name) | The name of the key pair to use | `string` | `"aws-main"` | no |
 | <a name="input_license_type"></a> [license\_type](#input\_license\_type) | The type of Nessus License to use: byob or preauth | `string` | `"byol"` | no |
 | <a name="input_name"></a> [name](#input\_name) | Application Name | `string` | `"nessus"` | no |
-| <a name="input_nessus_credentials"></a> [nessus\_credentials](#input\_nessus\_credentials) | Environmental variables to use for Nessus scanner | `string` | `"NESSUS_USER='nessususer'\nNESSUS_PASSWORD='p@ssw0rd'\n"` | no |
+| <a name="input_nessus_credentials"></a> [nessus\_credentials](#input\_nessus\_credentials) | Environmental variables to use for Nessus scanner | `string` | `"NESSUS_USER='nessususer'\nNESSUS_PASS='p@ssw0rd'\n"` | no |
 | <a name="input_nessus_key"></a> [nessus\_key](#input\_nessus\_key) | Linking key used to register scanner with Tenable.io. | `string` | `""` | no |
 | <a name="input_nessus_proxy"></a> [nessus\_proxy](#input\_nessus\_proxy) | FQDN/IP address of proxy, if required. | `string` | `""` | no |
 | <a name="input_nessus_proxy_port"></a> [nessus\_proxy\_port](#input\_nessus\_proxy\_port) | Port used to connect to proxy, if required. | `string` | `""` | no |
