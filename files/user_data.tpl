@@ -7,7 +7,7 @@
 }%{ endif }%{ if license == "byol" }#!/bin/bash
 yum update -y
 service nessusd stop
-/opt/nessus/sbin/nessuscli managed link --key=${key} --cloud
+/opt/nessus/sbin/nessuscli managed link --key=${key} --cloud --name=${name}
 service nessusd start
 %{ endif }%{ if license == "byol-sc" }#!/bin/bash
 yum update -y
