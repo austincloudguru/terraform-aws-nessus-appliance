@@ -8,7 +8,7 @@ import (
   http_helper "github.com/gruntwork-io/terratest/modules/http-helper"
 	//"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/gruntwork-io/terratest/modules/terraform"
-	"github.com/stretchr/testify/assert"
+	//"github.com/stretchr/testify/assert"
 )
 
 func TestExamplesTerraform(t *testing.T) {
@@ -19,10 +19,6 @@ func TestExamplesTerraform(t *testing.T) {
 
   defer terraform.Destroy(t, terraformOpts)
   terraform.InitAndApply(t, terraformOpts)
-
-  // Verify that the ALB is created
-  tfImageId := terraform.Output(t, terraformOpts, "image_id")
-  assert.Equal(t, tfImageId, "ami-023dd6394b8980892")
 
   // Verify that the status returns
   tlsConfig := tls.Config{InsecureSkipVerify: true}
