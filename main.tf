@@ -142,30 +142,85 @@ data "aws_ami" "this" {
 #-----------------------------------
 # Deploy Nessus Instance
 #-----------------------------------
-resource "aws_instance" "this" {
-  ami                    = data.aws_ami.this.id
-  instance_type          = var.instance_type
-  key_name               = var.key_name
-  iam_instance_profile   = aws_iam_instance_profile.this.name
-  subnet_id              = var.subnet_id
-  vpc_security_group_ids = [aws_security_group.this.id]
-  user_data              = local.userdata
-  tags = merge(
-    {
-      "Name" = var.name
-    },
-    var.tags
-  )
-  volume_tags = merge(
-    {
-      "Name" = var.name
-    },
-    var.tags
-  )
-  lifecycle {
-    ignore_changes = [volume_tags]
+locals {
+  tags_asg_format = null_resource.tags_as_list_of_maps.*.triggers
+}
+
+resource "null_resource" "tags_as_list_of_maps" {
+  count = length(keys(var.tags))
+
+  triggers = {
+    "key"                 = keys(var.tags)[count.index]
+    "value"               = values(var.tags)[count.index]
+    "propagate_at_launch" = "true"
   }
 }
+
+resource "aws_autoscaling_group" "this" {
+  name                      = var.name
+  min_size                  = 1
+  max_size                  = 1
+  desired_capacity          = 1
+  health_check_type         = "EC2"
+  health_check_grace_period = var.health_check_grace_period
+  termination_policies      = var.termination_policies
+  vpc_zone_identifier       = var.subnet_ids
+  launch_configuration      = aws_launch_configuration.this.name
+  lifecycle {
+    create_before_destroy = true
+  }
+
+  tags = concat(
+    [
+      {
+        key                 = "Name"
+        value               = var.name
+        propagate_at_launch = true
+      }
+    ],
+    local.tags_asg_format,
+  )
+}
+
+resource "aws_launch_configuration" "this" {
+  name_prefix                 = join("", [var.name, "-"])
+  image_id                    = data.aws_ami.this.id
+  instance_type               = var.instance_type
+  security_groups             = [aws_security_group.this.id]
+  iam_instance_profile        = aws_iam_instance_profile.this.name
+  key_name                    = var.key_name
+  associate_public_ip_address = var.associate_public_ip_address
+  user_data                   = local.userdata
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+# resource "aws_instance" "this" {
+#   ami                    = data.aws_ami.this.id
+#   instance_type          = var.instance_type
+#   key_name               = var.key_name
+#   iam_instance_profile   = aws_iam_instance_profile.this.name
+#   subnet_id              = var.subnet_id
+#   vpc_security_group_ids = [aws_security_group.this.id]
+#   user_data              = local.userdata
+#   tags = merge(
+#     {
+#       "Name" = var.name
+#     },
+#     var.tags
+#   )
+#   volume_tags = merge(
+#     {
+#       "Name" = var.name
+#     },
+#     var.tags
+#   )
+#   lifecycle {
+#     ignore_changes = [volume_tags]
+#   }
+# }
 
 #-----------------------------------
 # Cloud Connector Instance Profile

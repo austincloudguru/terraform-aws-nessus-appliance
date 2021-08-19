@@ -41,11 +41,13 @@ module "vpc" {
 }
 
 module "nessus-appliance" {
-  source                 = "../../"
-  security_group_ingress = local.security_group_ingress
-  vpc_id                 = module.vpc.vpc_id
-  subnet_id              = module.vpc.public_subnets[0]
-  nessus_key             = "dloiijfhqoiewrubfoqieuurbfcpoiqweunrcopiqeuhnrfpoiu13ehrwft"
-  external_id            = "dfasdfasdfihqewprijfnqwepikjnf"
-  cloud_connector        = true
+  source                      = "../../"
+  name                        = "nessus-terratest"
+  security_group_ingress      = local.security_group_ingress
+  vpc_id                      = module.vpc.vpc_id
+  subnet_ids                  = module.vpc.public_subnets
+  nessus_key                  = "dloiijfhqoiewrubfoqieuurbfcpoiqweunrcopiqeuhnrfpoiu13ehrwft"
+  external_id                 = "dfasdfasdfihqewprijfnqwepikjnf"
+  cloud_connector             = false
+  associate_public_ip_address = true
 }

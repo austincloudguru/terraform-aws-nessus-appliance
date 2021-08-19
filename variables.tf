@@ -100,10 +100,9 @@ variable "key_name" {
   default     = "aws-main"
 }
 
-variable "subnet_id" {
-  description = "VPC Subnet ID to launch in"
-  type        = string
-  default     = ""
+variable "subnet_ids" {
+  description = "The Subnet IDs"
+  type        = list(string)
 }
 
 variable "nessus_key" {
@@ -149,4 +148,28 @@ variable "nessus_credentials" {
 NESSUS_USER='nessususer'
 NESSUS_PASS='p@ssw0rd'
 EOF
+}
+
+variable "health_check_grace_period" {
+  description = "Time (in seconds) after instance comes into service before checking health"
+  type        = number
+  default     = 300
+}
+
+variable "termination_policies" {
+  description = "A list of policies to decide how the instances in the auto scale group should be terminated"
+  type        = list(string)
+  default     = ["OldestInstance", "Default"]
+}
+
+variable "protect_from_scale_in" {
+  description = "Allows setting instance protection"
+  type        = bool
+  default     = false
+}
+
+variable "associate_public_ip_address" {
+  description = "Whether to associate a public IP in the launch configuration"
+  type        = bool
+  default     = false
 }
