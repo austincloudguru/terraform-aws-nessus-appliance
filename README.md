@@ -41,7 +41,6 @@ module "nessus" {
                                cidr_blocks = []
                              }
                            }
-  nessus_key             = "dloiijfhqoiewrubfoqieuurbfcpoiqweunrcopiqeuhnrfpoiu13ehrwft"
   tags          = {
                     Terraform = "true"
                     Environment = "development"
