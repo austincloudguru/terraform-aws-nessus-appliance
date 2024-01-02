@@ -182,6 +182,11 @@ resource "aws_launch_configuration" "this" {
   associate_public_ip_address = var.associate_public_ip_address
   user_data                   = local.userdata
 
+  metadata_options {
+    http_endpoint = "enabled"
+    http_tokens   = "required"
+  }
+
   lifecycle {
     create_before_destroy = true
   }
