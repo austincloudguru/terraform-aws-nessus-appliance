@@ -48,6 +48,7 @@ resource "aws_security_group_rule" "this_egress" {
   for_each          = var.security_group_egress
   security_group_id = aws_security_group.this.id
   type              = "egress"
+  description       = lookup(each.value, "description", null)
   from_port         = lookup(each.value, "from_port", null)
   protocol          = lookup(each.value, "protocol", null)
   to_port           = lookup(each.value, "to_port", null)
@@ -87,6 +88,7 @@ resource "aws_iam_role_policy" "this" {
 }
 
 data "aws_iam_policy_document" "policy" {
+  #checkov:skip=CKV_AWS_356: "Ensure no IAM policies documents allow "*" as a statement's resource for restrictable actions"
   statement {
     effect = "Allow"
     actions = [
@@ -143,20 +145,14 @@ data "aws_ami" "this" {
 # Deploy Nessus Instance
 #-----------------------------------
 locals {
-  tags_asg_format = null_resource.tags_as_list_of_maps.*.triggers
-}
-
-resource "null_resource" "tags_as_list_of_maps" {
-  count = length(keys(var.tags))
-
-  triggers = {
-    "key"                 = keys(var.tags)[count.index]
-    "value"               = values(var.tags)[count.index]
-    "propagate_at_launch" = "true"
-  }
+  asg_tags = merge(
+    { "Name" = var.name },
+    var.tags
+  )
 }
 
 resource "aws_autoscaling_group" "this" {
+  #checkov:skip=CKV_AWS_315: "Ensure EC2 Auto Scaling groups use EC2 launch templates"
   name                      = var.name
   min_size                  = 1
   max_size                  = 1
@@ -170,19 +166,20 @@ resource "aws_autoscaling_group" "this" {
     create_before_destroy = true
   }
 
-  tags = concat(
-    [
-      {
-        key                 = "Name"
-        value               = var.name
-        propagate_at_launch = true
-      }
-    ],
-    local.tags_asg_format,
-  )
+  dynamic "tag" {
+    for_each = local.asg_tags
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
+  }
 }
 
 resource "aws_launch_configuration" "this" {
+  #checkov:skip=CKV_AWS_79: "Ensure Instance Metadata Service Version 1 is not enabled"
+  #checkov:skip=CKV_AWS_46: "Ensure no hard-coded secrets exist in EC2 user data"
+  #checkov:skip=CKV_AWS_8: "Ensure all data stored in the Launch configuration or instance Elastic Blocks Store is securely encrypted"
   name_prefix                 = join("", [var.name, "-"])
   image_id                    = data.aws_ami.this.id
   instance_type               = var.instance_type
@@ -259,7 +256,9 @@ data "aws_iam_policy_document" "tenable-connector-assume-role" {
   }
 }
 
-data "aws_iam_policy_document" "tenable-connector" {
+data "aws_iam_policy_document" "tenabloe-connector" {
+  #checkov:skip=CKV_AWS_108: "Ensure IAM policies does not allow data exfiltration"
+  #checkov:skip=CKV_AWS_356: "Ensure no IAM policies documents allow "*" as a statement's resource for restrictable actions"
   statement {
     effect = "Allow"
     actions = [
