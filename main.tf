@@ -256,7 +256,7 @@ data "aws_iam_policy_document" "tenable-connector-assume-role" {
   }
 }
 
-data "aws_iam_policy_document" "tenabloe-connector" {
+data "aws_iam_policy_document" "tenable-connector" {
   #checkov:skip=CKV_AWS_108: "Ensure IAM policies does not allow data exfiltration"
   #checkov:skip=CKV_AWS_356: "Ensure no IAM policies documents allow "*" as a statement's resource for restrictable actions"
   statement {
