@@ -31,6 +31,6 @@ func TestExamplesTerraform(t *testing.T) {
   tlsConfig := tls.Config{InsecureSkipVerify: true}
   public_ip := instanceIdsToIps[instanceIds[0]]
   url := fmt.Sprintf("https://%s:%s/%s", public_ip, "8834", "server/status")
-  http_helper.HttpGetWithRetry(t, url, &tlsConfig, 200, "{\"code\":503,\"progress\":null,\"status\":\"register\"}", 10, 10*time.Second)
+  http_helper.HttpGetWithRetry(t, url, &tlsConfig, 200, "{\"code\":503,\"detailed_status\":{\"login_status\":\"allow\",\"feed_status\":{\"progress\":100,\"status\":\"ready\"},\"db_status\":{\"progress\":null,\"status\":\"register\"},\"engine_status\":{\"progress\":100,\"status\":"ready\"}},\"pluginSet\":false,\"pluginData\":false,\"initLevel\":4,\"progress\":null,\"status\":\"register\"}", 10, 10*time.Second)
 
 }
